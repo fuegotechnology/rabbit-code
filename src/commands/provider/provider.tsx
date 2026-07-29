@@ -18,6 +18,8 @@ import {
   getProviderKeyEnvVar,
   providerRequiresApiKey,
   OPENAI_COMPATIBLE_PROVIDERS,
+  FREE_PROVIDERS,
+  KEYLESS_PROVIDERS,
 } from '../../utils/model/providers.js'
 import {
   getProviderModels,
@@ -32,45 +34,53 @@ import { fetchAvailableModels } from '../../services/api/openaiCompatibleClient.
 interface ProviderRow {
   provider: APIProvider
   envFlag: string
-  category: 'cloud' | 'local' | 'native'
+  category: 'free' | 'cloud' | 'local' | 'native'
 }
 
 const PROVIDER_ROWS: ProviderRow[] = [
-  // Cloud
-  { provider: 'openai',      envFlag: 'RABBIT_USE_OPENAI',      category: 'cloud' },
-  { provider: 'gemini',      envFlag: 'RABBIT_USE_GEMINI',      category: 'cloud' },
-  { provider: 'groq',        envFlag: 'RABBIT_USE_GROQ',        category: 'cloud' },
-  { provider: 'mistral',     envFlag: 'RABBIT_USE_MISTRAL',     category: 'cloud' },
-  { provider: 'xai',         envFlag: 'RABBIT_USE_XAI',         category: 'cloud' },
-  { provider: 'deepseek',    envFlag: 'RABBIT_USE_DEEPSEEK',    category: 'cloud' },
-  { provider: 'cohere',      envFlag: 'RABBIT_USE_COHERE',      category: 'cloud' },
-  { provider: 'perplexity',  envFlag: 'RABBIT_USE_PERPLEXITY',  category: 'cloud' },
-  { provider: 'cerebras',    envFlag: 'RABBIT_USE_CEREBRAS',    category: 'cloud' },
-  { provider: 'sambanova',   envFlag: 'RABBIT_USE_SAMBANOVA',   category: 'cloud' },
-  { provider: 'hyperbolic',  envFlag: 'RABBIT_USE_HYPERBOLIC',  category: 'cloud' },
-  { provider: 'nvidia',      envFlag: 'RABBIT_USE_NVIDIA',      category: 'cloud' },
-  { provider: 'ai21',        envFlag: 'RABBIT_USE_AI21',        category: 'cloud' },
-  { provider: 'moonshot',    envFlag: 'RABBIT_USE_MOONSHOT',    category: 'cloud' },
-  { provider: 'zhipu',       envFlag: 'RABBIT_USE_ZHIPU',       category: 'cloud' },
-  { provider: 'stepfun',     envFlag: 'RABBIT_USE_STEPFUN',     category: 'cloud' },
-  { provider: 'minimax',     envFlag: 'RABBIT_USE_MINIMAX',     category: 'cloud' },
-  { provider: 'together',    envFlag: 'RABBIT_USE_TOGETHER',    category: 'cloud' },
-  { provider: 'fireworks',   envFlag: 'RABBIT_USE_FIREWORKS',   category: 'cloud' },
-  { provider: 'openrouter',  envFlag: 'RABBIT_USE_OPENROUTER',  category: 'cloud' },
+  // Free-tier cloud
+  { provider: 'pollinations',  envFlag: 'RABBIT_USE_POLLINATIONS',  category: 'free' },
+  { provider: 'llm7',          envFlag: 'RABBIT_USE_LLM7',          category: 'free' },
+  { provider: 'gemini',        envFlag: 'RABBIT_USE_GEMINI',        category: 'free' },
+  { provider: 'groq',          envFlag: 'RABBIT_USE_GROQ',          category: 'free' },
+  { provider: 'mistral',       envFlag: 'RABBIT_USE_MISTRAL',       category: 'free' },
+  { provider: 'cerebras',      envFlag: 'RABBIT_USE_CEREBRAS',      category: 'free' },
+  { provider: 'deepseek',      envFlag: 'RABBIT_USE_DEEPSEEK',      category: 'free' },
+  { provider: 'cohere',        envFlag: 'RABBIT_USE_COHERE',        category: 'free' },
+  { provider: 'nvidia',        envFlag: 'RABBIT_USE_NVIDIA',        category: 'free' },
+  { provider: 'githubmodels',  envFlag: 'RABBIT_USE_GITHUBMODELS',  category: 'free' },
+  { provider: 'huggingface',   envFlag: 'RABBIT_USE_HUGGINGFACE',   category: 'free' },
+  { provider: 'cloudflare',    envFlag: 'RABBIT_USE_CLOUDFLARE',    category: 'free' },
+  { provider: 'siliconflow',   envFlag: 'RABBIT_USE_SILICONFLOW',   category: 'free' },
+  { provider: 'modelscope',    envFlag: 'RABBIT_USE_MODELSCOPE',    category: 'free' },
+  // Paid cloud
+  { provider: 'openai',        envFlag: 'RABBIT_USE_OPENAI',        category: 'cloud' },
+  { provider: 'xai',           envFlag: 'RABBIT_USE_XAI',           category: 'cloud' },
+  { provider: 'together',      envFlag: 'RABBIT_USE_TOGETHER',      category: 'cloud' },
+  { provider: 'fireworks',     envFlag: 'RABBIT_USE_FIREWORKS',     category: 'cloud' },
+  { provider: 'openrouter',    envFlag: 'RABBIT_USE_OPENROUTER',    category: 'cloud' },
+  { provider: 'perplexity',    envFlag: 'RABBIT_USE_PERPLEXITY',    category: 'cloud' },
+  { provider: 'sambanova',     envFlag: 'RABBIT_USE_SAMBANOVA',     category: 'cloud' },
+  { provider: 'hyperbolic',    envFlag: 'RABBIT_USE_HYPERBOLIC',    category: 'cloud' },
+  { provider: 'ai21',          envFlag: 'RABBIT_USE_AI21',          category: 'cloud' },
+  { provider: 'moonshot',      envFlag: 'RABBIT_USE_MOONSHOT',      category: 'cloud' },
+  { provider: 'zhipu',         envFlag: 'RABBIT_USE_ZHIPU',         category: 'cloud' },
+  { provider: 'stepfun',       envFlag: 'RABBIT_USE_STEPFUN',       category: 'cloud' },
+  { provider: 'minimax',       envFlag: 'RABBIT_USE_MINIMAX',       category: 'cloud' },
   // Local
-  { provider: 'opencode',    envFlag: 'RABBIT_USE_OPENCODE',    category: 'local' },
-  { provider: 'ollama',      envFlag: 'RABBIT_USE_OLLAMA',      category: 'local' },
-  { provider: 'lmstudio',    envFlag: 'RABBIT_USE_LMSTUDIO',    category: 'local' },
-  { provider: 'jan',         envFlag: 'RABBIT_USE_JAN',         category: 'local' },
-  { provider: 'localai',     envFlag: 'RABBIT_USE_LOCALAI',     category: 'local' },
-  { provider: 'vllm',        envFlag: 'RABBIT_USE_VLLM',        category: 'local' },
-  { provider: 'tgi',         envFlag: 'RABBIT_USE_TGI',         category: 'local' },
-  { provider: 'xinference',  envFlag: 'RABBIT_USE_XINFERENCE',  category: 'local' },
-  { provider: 'custom',      envFlag: 'RABBIT_USE_CUSTOM',      category: 'local' },
+  { provider: 'opencode',      envFlag: 'RABBIT_USE_OPENCODE',      category: 'local' },
+  { provider: 'ollama',        envFlag: 'RABBIT_USE_OLLAMA',        category: 'local' },
+  { provider: 'lmstudio',      envFlag: 'RABBIT_USE_LMSTUDIO',      category: 'local' },
+  { provider: 'jan',           envFlag: 'RABBIT_USE_JAN',           category: 'local' },
+  { provider: 'localai',       envFlag: 'RABBIT_USE_LOCALAI',       category: 'local' },
+  { provider: 'vllm',          envFlag: 'RABBIT_USE_VLLM',          category: 'local' },
+  { provider: 'tgi',           envFlag: 'RABBIT_USE_TGI',           category: 'local' },
+  { provider: 'xinference',    envFlag: 'RABBIT_USE_XINFERENCE',    category: 'local' },
+  { provider: 'custom',        envFlag: 'RABBIT_USE_CUSTOM',        category: 'local' },
   // Anthropic-native
-  { provider: 'bedrock',     envFlag: 'RABBIT_USE_BEDROCK',     category: 'native' },
-  { provider: 'vertex',      envFlag: 'RABBIT_USE_VERTEX',      category: 'native' },
-  { provider: 'foundry',     envFlag: 'RABBIT_USE_FOUNDRY',     category: 'native' },
+  { provider: 'bedrock',       envFlag: 'RABBIT_USE_BEDROCK',       category: 'native' },
+  { provider: 'vertex',        envFlag: 'RABBIT_USE_VERTEX',        category: 'native' },
+  { provider: 'foundry',       envFlag: 'RABBIT_USE_FOUNDRY',       category: 'native' },
 ]
 
 // ---------------------------------------------------------------------------
@@ -86,8 +96,16 @@ function ProviderStatusLine({
 }) {
   const active = current === row.provider
   const keyVar = getProviderKeyEnvVar(row.provider)
+  const isKeyless = KEYLESS_PROVIDERS.has(row.provider)
+  const isFree = FREE_PROVIDERS.has(row.provider)
   const needsKey = providerRequiresApiKey(row.provider)
   const hasKey = keyVar ? !!process.env[keyVar] : !needsKey
+
+  const freeTag = isKeyless
+    ? chalk.green(' (free, no key!)')
+    : isFree
+      ? chalk.green(' (free tier)')
+      : ''
 
   return (
     <Box>
@@ -97,14 +115,14 @@ function ProviderStatusLine({
           ? chalk.bold.green(getProviderDisplayName(row.provider))
           : chalk.dim(getProviderDisplayName(row.provider))}
       </Text>
-      {needsKey && (
+      {freeTag ? <Text>{freeTag}</Text> : null}
+      {needsKey && !isKeyless && (
         <Text color={hasKey ? 'green' : 'yellow'}>
           {' '}
           {hasKey ? chalk.green('✓') : chalk.yellow('⚠ no key')}
           {keyVar && !hasKey ? chalk.dim(` (${keyVar})`) : ''}
         </Text>
       )}
-      {!needsKey && <Text color="cyan"> {chalk.cyan('(local)')}</Text>}
     </Box>
   )
 }
@@ -143,6 +161,7 @@ function ProviderCommand({
 
   const knownModels = Object.values(getProviderModels(showProvider))
 
+  const freeRows = PROVIDER_ROWS.filter(r => r.category === 'free')
   const cloudRows = PROVIDER_ROWS.filter(r => r.category === 'cloud')
   const localRows = PROVIDER_ROWS.filter(r => r.category === 'local')
   const nativeRows = PROVIDER_ROWS.filter(r => r.category === 'native')
@@ -171,7 +190,14 @@ function ProviderCommand({
 
       {/* Provider groups */}
       <Box marginTop={1} flexDirection="column">
-        <Text bold color="yellow">☁  Cloud providers:</Text>
+        <Text bold color="green">🆓 Free providers:</Text>
+        {freeRows.map(row => (
+          <ProviderStatusLine key={row.provider} current={current} row={row} />
+        ))}
+      </Box>
+
+      <Box marginTop={1} flexDirection="column">
+        <Text bold color="yellow">☁  Paid cloud providers:</Text>
         {cloudRows.map(row => (
           <ProviderStatusLine key={row.provider} current={current} row={row} />
         ))}
@@ -246,7 +272,11 @@ function ProviderCommand({
         <Text color="gray">  source scripts/setup-provider.sh gemini   gemini-2.5-pro</Text>
         <Text color="gray">  source scripts/setup-provider.sh deepseek deepseek-chat</Text>
         <Text color="gray">  source scripts/setup-provider.sh ollama   llama3.3</Text>
-        <Text color="gray">  source scripts/setup-provider.sh opencode            # zen mode</Text>
+        <Text color="gray">  source scripts/setup-provider.sh pollinations       # no key!</Text>
+        <Text color="gray">  source scripts/setup-provider.sh llm7               # no key!</Text>
+        <Text color="gray">  source scripts/setup-provider.sh githubmodels       # GITHUB_TOKEN</Text>
+        <Text color="gray">  source scripts/setup-provider.sh cloudflare         # CF account</Text>
+        <Text color="gray">  source scripts/setup-provider.sh opencode           # zen mode</Text>
         <Text color="gray">  source scripts/setup-provider.sh list                # all providers</Text>
         <Text color="gray">  export ANTHROPIC_MODEL=&lt;model-id&gt;              # override model</Text>
       </Box>

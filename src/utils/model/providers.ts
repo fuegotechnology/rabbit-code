@@ -11,22 +11,31 @@ import { isEnvTruthy } from '../envUtils.js'
  * │  vertex        RABBIT_USE_VERTEX=1      GCP Vertex AI                   │
  * │  foundry       RABBIT_USE_FOUNDRY=1     Azure AI Foundry                │
  * ├─────────────────────────────────────────────────────────────────────────┤
+ * │ FREE TIERS — no credit card required (★ = completely free / no key)     │
+ * │  gemini        RABBIT_USE_GEMINI=1      Gemini 2.5 Pro free ★           │
+ * │  groq          RABBIT_USE_GROQ=1        Groq free tier (14.4k req/day)  │
+ * │  mistral       RABBIT_USE_MISTRAL=1     Mistral free tier (1B tok/mo)   │
+ * │  cerebras      RABBIT_USE_CEREBRAS=1    Cerebras free (1M tok/day)      │
+ * │  deepseek      RABBIT_USE_DEEPSEEK=1    DeepSeek free (5M tok free)     │
+ * │  cohere        RABBIT_USE_COHERE=1      Cohere free tier                │
+ * │  nvidia        RABBIT_USE_NVIDIA=1      NVIDIA NIM free tier            │
+ * │  githubmodels  RABBIT_USE_GITHUBMODELS=1 GitHub Models (GITHUB_TOKEN)   │
+ * │  huggingface   RABBIT_USE_HUGGINGFACE=1 HuggingFace Inference (HF_TOKEN)│
+ * │  cloudflare    RABBIT_USE_CLOUDFLARE=1  Cloudflare Workers AI ★         │
+ * │  pollinations  RABBIT_USE_POLLINATIONS=1 Pollinations AI ★ (no key!)    │
+ * │  siliconflow   RABBIT_USE_SILICONFLOW=1 SiliconFlow (free tier)         │
+ * │  llm7          RABBIT_USE_LLM7=1        LLM7.io ★ (no key, unlimited)   │
+ * │  modelscope    RABBIT_USE_MODELSCOPE=1  ModelScope (Alibaba, free tier) │
+ * ├─────────────────────────────────────────────────────────────────────────┤
  * │ OPENAI-COMPATIBLE — major cloud                                         │
  * │  openai        RABBIT_USE_OPENAI=1      OpenAI (GPT-4o, o3, o4…)       │
- * │  gemini        RABBIT_USE_GEMINI=1      Google Gemini 2.5               │
- * │  groq          RABBIT_USE_GROQ=1        Groq (ultra-fast Llama/DeepSeek)│
- * │  mistral       RABBIT_USE_MISTRAL=1     Mistral AI                      │
  * │  xai           RABBIT_USE_XAI=1         xAI Grok-3                      │
  * │  together      RABBIT_USE_TOGETHER=1    Together AI                     │
  * │  fireworks     RABBIT_USE_FIREWORKS=1   Fireworks AI                    │
  * │  openrouter    RABBIT_USE_OPENROUTER=1  OpenRouter (200+ models)        │
- * │  deepseek      RABBIT_USE_DEEPSEEK=1    DeepSeek AI (chat + reasoner)   │
- * │  cohere        RABBIT_USE_COHERE=1      Cohere Command-R+               │
  * │  perplexity    RABBIT_USE_PERPLEXITY=1  Perplexity (online search AI)   │
- * │  cerebras      RABBIT_USE_CEREBRAS=1    Cerebras (ultra-fast inference)  │
  * │  sambanova     RABBIT_USE_SAMBANOVA=1   SambaNova (fast Llama / DeepSeek)│
  * │  hyperbolic    RABBIT_USE_HYPERBOLIC=1  Hyperbolic (cheap GPU models)   │
- * │  nvidia        RABBIT_USE_NVIDIA=1      NVIDIA NIM (on-prem / cloud)    │
  * │  ai21          RABBIT_USE_AI21=1        AI21 Jamba                      │
  * │  moonshot      RABBIT_USE_MOONSHOT=1    Moonshot AI (Kimi)              │
  * │  zhipu         RABBIT_USE_ZHIPU=1       Zhipu AI (GLM)                  │
@@ -34,16 +43,16 @@ import { isEnvTruthy } from '../envUtils.js'
  * │  qianfan       RABBIT_USE_QIANFAN=1     Baidu Qianfan                   │
  * │  stepfun       RABBIT_USE_STEPFUN=1     StepFun (Step)                  │
  * │  minimax       RABBIT_USE_MINIMAX=1     MiniMax                         │
- * │  opencode      RABBIT_USE_OPENCODE=1    OpenCode (zen-mode local)       │
+ * │  opencode      RABBIT_USE_OPENCODE=1    OpenCode (zen-mode local/cloud) │
  * ├─────────────────────────────────────────────────────────────────────────┤
  * │ LOCAL / SELF-HOSTED                                                     │
- * │  ollama        RABBIT_USE_OLLAMA=1      Ollama local server             │
- * │  lmstudio      RABBIT_USE_LMSTUDIO=1    LM Studio local server          │
- * │  jan           RABBIT_USE_JAN=1         Jan.ai local server             │
- * │  localai       RABBIT_USE_LOCALAI=1     LocalAI self-hosted             │
- * │  vllm          RABBIT_USE_VLLM=1        vLLM self-hosted                │
- * │  tgi           RABBIT_USE_TGI=1         HuggingFace TGI                 │
- * │  xinference    RABBIT_USE_XINFERENCE=1  Xinference                      │
+ * │  ollama        RABBIT_USE_OLLAMA=1      Ollama local server ★           │
+ * │  lmstudio      RABBIT_USE_LMSTUDIO=1    LM Studio local server ★        │
+ * │  jan           RABBIT_USE_JAN=1         Jan.ai local server ★           │
+ * │  localai       RABBIT_USE_LOCALAI=1     LocalAI self-hosted ★           │
+ * │  vllm          RABBIT_USE_VLLM=1        vLLM self-hosted ★              │
+ * │  tgi           RABBIT_USE_TGI=1         HuggingFace TGI self-hosted ★   │
+ * │  xinference    RABBIT_USE_XINFERENCE=1  Xinference ★                    │
  * │  custom        RABBIT_USE_CUSTOM=1      Any OpenAI-compat (OPENAI_BASE_URL) │
  * └─────────────────────────────────────────────────────────────────────────┘
  *
@@ -56,22 +65,30 @@ export type APIProvider =
   | 'bedrock'
   | 'vertex'
   | 'foundry'
-  // Major cloud
+  // Free-tier cloud (no credit card for basic use)
+  | 'gemini'       // Google AI Studio — free, no CC
+  | 'groq'         // Groq free tier — no CC
+  | 'mistral'      // Mistral free tier — no CC
+  | 'cerebras'     // Cerebras free — no CC
+  | 'deepseek'     // DeepSeek free 5M tokens — no CC
+  | 'cohere'       // Cohere free tier — no CC
+  | 'nvidia'       // NVIDIA NIM free tier — no CC (phone verify)
+  | 'githubmodels' // GitHub Models — free with GitHub account (GITHUB_TOKEN)
+  | 'huggingface'  // HuggingFace Inference — free $0.10/mo credits (HF_TOKEN)
+  | 'cloudflare'   // Cloudflare Workers AI — 10K neurons/day free, no CC
+  | 'pollinations' // Pollinations AI — completely free, no key required!
+  | 'siliconflow'  // SiliconFlow — generous free tier, registration
+  | 'llm7'         // LLM7.io — completely free, no key required!
+  | 'modelscope'   // ModelScope (Alibaba) — free tier, registration
+  // Paid cloud
   | 'openai'
-  | 'gemini'
-  | 'groq'
-  | 'mistral'
   | 'xai'
   | 'together'
   | 'fireworks'
   | 'openrouter'
-  | 'deepseek'
-  | 'cohere'
   | 'perplexity'
-  | 'cerebras'
   | 'sambanova'
   | 'hyperbolic'
-  | 'nvidia'
   | 'ai21'
   | 'moonshot'
   | 'zhipu'
@@ -80,7 +97,7 @@ export type APIProvider =
   | 'stepfun'
   | 'minimax'
   | 'opencode'
-  // Local / self-hosted
+  // Local / self-hosted (free)
   | 'ollama'
   | 'lmstudio'
   | 'jan'
@@ -95,21 +112,30 @@ export type APIProvider =
  * These all go through the unified openaiCompatibleClient adapter.
  */
 export const OPENAI_COMPATIBLE_PROVIDERS: ReadonlySet<APIProvider> = new Set([
-  'openai',
+  // Free-tier
   'gemini',
   'groq',
   'mistral',
+  'cerebras',
+  'deepseek',
+  'cohere',
+  'nvidia',
+  'githubmodels',
+  'huggingface',
+  'cloudflare',
+  'pollinations',
+  'siliconflow',
+  'llm7',
+  'modelscope',
+  // Paid cloud
+  'openai',
   'xai',
   'together',
   'fireworks',
   'openrouter',
-  'deepseek',
-  'cohere',
   'perplexity',
-  'cerebras',
   'sambanova',
   'hyperbolic',
-  'nvidia',
   'ai21',
   'moonshot',
   'zhipu',
@@ -118,6 +144,7 @@ export const OPENAI_COMPATIBLE_PROVIDERS: ReadonlySet<APIProvider> = new Set([
   'stepfun',
   'minimax',
   'opencode',
+  // Local
   'ollama',
   'lmstudio',
   'jan',
@@ -126,6 +153,38 @@ export const OPENAI_COMPATIBLE_PROVIDERS: ReadonlySet<APIProvider> = new Set([
   'tgi',
   'xinference',
   'custom',
+])
+
+/**
+ * Providers that are free (no credit card required, no billing).
+ * Some require a free account/key, some need nothing at all.
+ */
+export const FREE_PROVIDERS: ReadonlySet<APIProvider> = new Set([
+  // Cloud — truly free tier, no CC
+  'gemini',        // Google AI Studio — free API key
+  'groq',          // Groq — free API key
+  'mistral',       // Mistral — free API key
+  'cerebras',      // Cerebras — free API key
+  'deepseek',      // DeepSeek — free 5M tokens
+  'cohere',        // Cohere — free API key
+  'nvidia',        // NVIDIA NIM — free tier (phone verify)
+  'githubmodels',  // GitHub Models — free GITHUB_TOKEN
+  'huggingface',   // HuggingFace — free HF_TOKEN
+  // Cloud — no key needed at all!
+  'cloudflare',    // Cloudflare Workers AI (with account, 10k neurons/day)
+  'pollinations',  // Pollinations AI — totally anonymous, no key
+  'llm7',          // LLM7.io — totally anonymous, no key
+  // Free with registration
+  'siliconflow',   // SiliconFlow — generous free tier
+  'modelscope',    // ModelScope — free tier
+  // Local (always free)
+  'ollama',
+  'lmstudio',
+  'jan',
+  'localai',
+  'vllm',
+  'tgi',
+  'xinference',
 ])
 
 export function isOpenAICompatibleProvider(provider: APIProvider): boolean {
@@ -145,30 +204,38 @@ export function getAPIProvider(): APIProvider {
   if (useFlag('BEDROCK'))    return 'bedrock'
   if (useFlag('VERTEX'))     return 'vertex'
   if (useFlag('FOUNDRY'))    return 'foundry'
-  // Major cloud
-  if (useFlag('OPENAI'))     return 'openai'
-  if (useFlag('GEMINI'))     return 'gemini'
-  if (useFlag('GROQ'))       return 'groq'
-  if (useFlag('MISTRAL'))    return 'mistral'
-  if (useFlag('XAI'))        return 'xai'
-  if (useFlag('TOGETHER'))   return 'together'
-  if (useFlag('FIREWORKS'))  return 'fireworks'
-  if (useFlag('OPENROUTER')) return 'openrouter'
-  if (useFlag('DEEPSEEK'))   return 'deepseek'
-  if (useFlag('COHERE'))     return 'cohere'
-  if (useFlag('PERPLEXITY')) return 'perplexity'
-  if (useFlag('CEREBRAS'))   return 'cerebras'
-  if (useFlag('SAMBANOVA'))  return 'sambanova'
-  if (useFlag('HYPERBOLIC')) return 'hyperbolic'
-  if (useFlag('NVIDIA'))     return 'nvidia'
-  if (useFlag('AI21'))       return 'ai21'
-  if (useFlag('MOONSHOT'))   return 'moonshot'
-  if (useFlag('ZHIPU'))      return 'zhipu'
-  if (useFlag('BAIDU'))      return 'baidu'
-  if (useFlag('QIANFAN'))    return 'qianfan'
-  if (useFlag('STEPFUN'))    return 'stepfun'
-  if (useFlag('MINIMAX'))    return 'minimax'
-  if (useFlag('OPENCODE'))   return 'opencode'
+  // Free-tier cloud
+  if (useFlag('GEMINI'))        return 'gemini'
+  if (useFlag('GROQ'))          return 'groq'
+  if (useFlag('MISTRAL'))       return 'mistral'
+  if (useFlag('CEREBRAS'))      return 'cerebras'
+  if (useFlag('DEEPSEEK'))      return 'deepseek'
+  if (useFlag('COHERE'))        return 'cohere'
+  if (useFlag('NVIDIA'))        return 'nvidia'
+  if (useFlag('GITHUBMODELS') || isEnvTruthy(process.env.GITHUB_MODELS)) return 'githubmodels'
+  if (useFlag('HUGGINGFACE') || isEnvTruthy(process.env.HF_INFERENCE))   return 'huggingface'
+  if (useFlag('CLOUDFLARE'))    return 'cloudflare'
+  if (useFlag('POLLINATIONS'))  return 'pollinations'
+  if (useFlag('SILICONFLOW'))   return 'siliconflow'
+  if (useFlag('LLM7'))          return 'llm7'
+  if (useFlag('MODELSCOPE'))    return 'modelscope'
+  // Paid cloud
+  if (useFlag('OPENAI'))        return 'openai'
+  if (useFlag('XAI'))           return 'xai'
+  if (useFlag('TOGETHER'))      return 'together'
+  if (useFlag('FIREWORKS'))     return 'fireworks'
+  if (useFlag('OPENROUTER'))    return 'openrouter'
+  if (useFlag('PERPLEXITY'))    return 'perplexity'
+  if (useFlag('SAMBANOVA'))     return 'sambanova'
+  if (useFlag('HYPERBOLIC'))    return 'hyperbolic'
+  if (useFlag('AI21'))          return 'ai21'
+  if (useFlag('MOONSHOT'))      return 'moonshot'
+  if (useFlag('ZHIPU'))         return 'zhipu'
+  if (useFlag('BAIDU'))         return 'baidu'
+  if (useFlag('QIANFAN'))       return 'qianfan'
+  if (useFlag('STEPFUN'))       return 'stepfun'
+  if (useFlag('MINIMAX'))       return 'minimax'
+  if (useFlag('OPENCODE'))      return 'opencode'
   // Local
   if (useFlag('OLLAMA'))     return 'ollama'
   if (useFlag('LMSTUDIO'))   return 'lmstudio'
@@ -241,9 +308,28 @@ export function getOpenAICompatibleBaseURL(): string {
       return 'https://api.stepfun.com/v1'
     case 'minimax':
       return 'https://api.minimax.chat/v1'
+    // Free providers
+    case 'githubmodels':
+      return 'https://models.github.ai/inference'
+    case 'huggingface':
+      return 'https://router.huggingface.co/v1'
+    case 'cloudflare': {
+      const accountId = process.env.CLOUDFLARE_ACCOUNT_ID ?? ''
+      return accountId
+        ? `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/v1`
+        : 'https://api.cloudflare.com/client/v4/accounts/ACCOUNT_ID/ai/v1'
+    }
+    case 'pollinations':
+      return 'https://text.pollinations.ai/openai'
+    case 'siliconflow':
+      return 'https://api.siliconflow.cn/v1'
+    case 'llm7':
+      return 'https://api.llm7.io/v1'
+    case 'modelscope':
+      return 'https://api-inference.modelscope.cn/v1'
     case 'opencode': {
-      // OpenCode / Zen mode: usually runs a local proxy on a configurable port
-      const host = process.env.OPENCODE_HOST ?? 'http://localhost:4000'
+      // OpenCode / Zen mode cloud endpoint or local proxy
+      const host = process.env.OPENCODE_HOST ?? 'https://opencode.ai/zen'
       return `${host.replace(/\/$/, '')}/v1`
     }
     case 'ollama': {
@@ -309,7 +395,15 @@ export function getOpenAICompatibleApiKey(): string {
     case 'qianfan':      return process.env.QIANFAN_API_KEY ?? process.env.BAIDU_API_KEY ?? ''
     case 'stepfun':      return process.env.STEPFUN_API_KEY ?? ''
     case 'minimax':      return process.env.MINIMAX_API_KEY ?? ''
-    case 'opencode':     return process.env.OPENCODE_API_KEY ?? 'rabbit-code'
+    // Free providers
+    case 'githubmodels': return process.env.GITHUB_TOKEN ?? process.env.GITHUB_MODELS_TOKEN ?? ''
+    case 'huggingface':  return process.env.HF_TOKEN ?? process.env.HUGGINGFACE_HUB_TOKEN ?? ''
+    case 'cloudflare':   return process.env.CLOUDFLARE_API_TOKEN ?? process.env.CF_API_TOKEN ?? ''
+    case 'pollinations': return process.env.POLLINATIONS_API_KEY ?? ''   // no key needed for free models
+    case 'siliconflow':  return process.env.SILICONFLOW_API_KEY ?? ''
+    case 'llm7':         return process.env.LLM7_API_KEY ?? 'no-key-needed' // keyless
+    case 'modelscope':   return process.env.MODELSCOPE_API_KEY ?? process.env.DASHSCOPE_API_KEY ?? ''
+    case 'opencode':     return process.env.OPENCODE_API_KEY ?? ''
     case 'ollama':       return process.env.OLLAMA_API_KEY ?? 'ollama'
     case 'lmstudio':     return process.env.LMSTUDIO_API_KEY ?? 'lm-studio'
     case 'jan':          return process.env.JAN_API_KEY ?? 'jan'
@@ -354,6 +448,13 @@ export function getProviderDisplayName(provider?: APIProvider): string {
     qianfan:     'Baidu Qianfan',
     stepfun:     'StepFun',
     minimax:     'MiniMax',
+    githubmodels:'GitHub Models (free)',
+    huggingface: 'HuggingFace Inference (free)',
+    cloudflare:  'Cloudflare Workers AI (free)',
+    pollinations:'Pollinations AI (free, no key!)',
+    siliconflow: 'SiliconFlow (free tier)',
+    llm7:        'LLM7.io (free, no key!)',
+    modelscope:  'ModelScope / Alibaba (free tier)',
     opencode:    'OpenCode / Zen',
     ollama:      'Ollama (local)',
     lmstudio:    'LM Studio (local)',
@@ -371,12 +472,22 @@ export function getProviderDisplayName(provider?: APIProvider): string {
  * Whether the current provider requires an API key.
  * Local providers don't.
  */
+/** Providers that work without any API key at all (truly keyless). */
+export const KEYLESS_PROVIDERS: ReadonlySet<APIProvider> = new Set<APIProvider>([
+  'pollinations',  // no key, ever
+  'llm7',          // no key, ever
+  'ollama',
+  'lmstudio',
+  'jan',
+  'localai',
+  'vllm',
+  'tgi',
+  'xinference',
+])
+
 export function providerRequiresApiKey(provider?: APIProvider): boolean {
   const p = provider ?? getAPIProvider()
-  const freeProviders: APIProvider[] = [
-    'ollama', 'lmstudio', 'jan', 'localai', 'vllm', 'tgi', 'xinference', 'opencode',
-  ]
-  return !freeProviders.includes(p)
+  return !KEYLESS_PROVIDERS.has(p)
 }
 
 /**
@@ -402,12 +513,17 @@ export function getProviderKeyEnvVar(provider?: APIProvider): string | null {
     hyperbolic:  'HYPERBOLIC_API_KEY',
     nvidia:      'NVIDIA_API_KEY',
     ai21:        'AI21_API_KEY',
-    moonshot:    'MOONSHOT_API_KEY',
-    zhipu:       'ZHIPU_API_KEY',
-    baidu:       'BAIDU_API_KEY',
-    qianfan:     'QIANFAN_API_KEY',
-    stepfun:     'STEPFUN_API_KEY',
-    minimax:     'MINIMAX_API_KEY',
+    moonshot:     'MOONSHOT_API_KEY',
+    zhipu:        'ZHIPU_API_KEY',
+    baidu:        'BAIDU_API_KEY',
+    qianfan:      'QIANFAN_API_KEY',
+    stepfun:      'STEPFUN_API_KEY',
+    minimax:      'MINIMAX_API_KEY',
+    githubmodels: 'GITHUB_TOKEN',
+    huggingface:  'HF_TOKEN',
+    cloudflare:   'CLOUDFLARE_API_TOKEN',
+    siliconflow:  'SILICONFLOW_API_KEY',
+    modelscope:   'MODELSCOPE_API_KEY',
   }
   return keyVars[p] ?? null
 }

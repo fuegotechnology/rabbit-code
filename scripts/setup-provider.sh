@@ -231,6 +231,71 @@ case "${PROVIDER}" in
     echo "   Browse models: https://openrouter.ai/models"
     ;;
 
+  # ---- Truly free (no credit card) ----------------------------------------
+
+  githubmodels|github)
+    _reset_providers
+    export RABBIT_USE_GITHUBMODELS=1
+    [[ -n "${MODEL}" ]] && export ANTHROPIC_MODEL="${MODEL}" || export ANTHROPIC_MODEL="gpt-4o"
+    echo "✅ Provider: GitHub Models (free) | Model: ${ANTHROPIC_MODEL}"
+    echo "   Requires: GITHUB_TOKEN (your GitHub personal access token)"
+    echo "   No billing — just a GitHub account!"
+    echo "   Models: gpt-4o, o3, o4-mini, Llama-3.3-70B, DeepSeek-R1, Phi-4, Grok-3, Mistral-Large"
+    ;;
+
+  huggingface|hf)
+    _reset_providers
+    export RABBIT_USE_HUGGINGFACE=1
+    [[ -n "${MODEL}" ]] && export ANTHROPIC_MODEL="${MODEL}" || export ANTHROPIC_MODEL="meta-llama/Llama-3.3-70B-Instruct"
+    echo "✅ Provider: HuggingFace Inference (free tier) | Model: ${ANTHROPIC_MODEL}"
+    echo "   Requires: HF_TOKEN (free at huggingface.co — \$0.10/mo credits)"
+    echo "   200+ models via inference router (Groq, SambaNova, Together backends)"
+    ;;
+
+  cloudflare|cf)
+    _reset_providers
+    export RABBIT_USE_CLOUDFLARE=1
+    [[ -n "${MODEL}" ]] && export ANTHROPIC_MODEL="${MODEL}" || export ANTHROPIC_MODEL="@cf/meta/llama-3.3-70b-instruct"
+    echo "✅ Provider: Cloudflare Workers AI (free) | Model: ${ANTHROPIC_MODEL}"
+    echo "   Requires: CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN"
+    echo "   Free: 10,000 neurons/day — no credit card needed"
+    echo "   Also routes third-party models via AI Gateway (openai/gpt-4o, etc.)"
+    ;;
+
+  pollinations)
+    _reset_providers
+    export RABBIT_USE_POLLINATIONS=1
+    [[ -n "${MODEL}" ]] && export ANTHROPIC_MODEL="${MODEL}" || export ANTHROPIC_MODEL="openai-large"
+    echo "✅ Provider: Pollinations AI (🆓 completely free, no key!) | Model: ${ANTHROPIC_MODEL}"
+    echo "   No sign-up, no API key, no credit card — just use it!"
+    echo "   Models: openai-large (GPT-4o), openai (GPT-4o-mini), mistral, deepseek, gemini, qwen-coder"
+    ;;
+
+  llm7)
+    _reset_providers
+    export RABBIT_USE_LLM7=1
+    [[ -n "${MODEL}" ]] && export ANTHROPIC_MODEL="${MODEL}" || export ANTHROPIC_MODEL="gpt-4o"
+    echo "✅ Provider: LLM7.io (🆓 completely free, no key!) | Model: ${ANTHROPIC_MODEL}"
+    echo "   No sign-up, no API key — unlimited access to GPT-4o, Claude, Gemini, DeepSeek"
+    ;;
+
+  siliconflow|silicon)
+    _reset_providers
+    export RABBIT_USE_SILICONFLOW=1
+    [[ -n "${MODEL}" ]] && export ANTHROPIC_MODEL="${MODEL}" || export ANTHROPIC_MODEL="Qwen/Qwen2.5-72B-Instruct"
+    echo "✅ Provider: SiliconFlow (free tier) | Model: ${ANTHROPIC_MODEL}"
+    echo "   Requires: SILICONFLOW_API_KEY (free registration at siliconflow.cn)"
+    echo "   Many open models free: DeepSeek V3/R1, Qwen 2.5 72B, Llama 3.3 70B"
+    ;;
+
+  modelscope|alibaba)
+    _reset_providers
+    export RABBIT_USE_MODELSCOPE=1
+    [[ -n "${MODEL}" ]] && export ANTHROPIC_MODEL="${MODEL}" || export ANTHROPIC_MODEL="Qwen/Qwen2.5-72B-Instruct"
+    echo "✅ Provider: ModelScope / Alibaba (free tier) | Model: ${ANTHROPIC_MODEL}"
+    echo "   Requires: MODELSCOPE_API_KEY (free at modelscope.cn)"
+    ;;
+
   # ---- Local / self-hosted -------------------------------------------------
 
   opencode|zen)
@@ -347,48 +412,59 @@ case "${PROVIDER}" in
 
   list|--list|-l)
     cat <<'EOF'
-rabbit-code provider list:
+rabbit-code provider list
 
-  CLOUD — major providers:
-    openai         OpenAI GPT-4o, o3, GPT-4.1       OPENAI_API_KEY
-    gemini         Google Gemini 2.5 Pro/Flash       GEMINI_API_KEY
-    groq           Groq (ultra-fast Llama/DeepSeek)  GROQ_API_KEY
-    mistral        Mistral AI                         MISTRAL_API_KEY
-    xai / grok     xAI Grok-3                        XAI_API_KEY
-    deepseek       DeepSeek V3 / R1                  DEEPSEEK_API_KEY
-    cohere         Cohere Command-R+/A               COHERE_API_KEY
-    perplexity     Perplexity Sonar (web search)     PERPLEXITY_API_KEY
-    cerebras       Cerebras (ultra-fast inference)   CEREBRAS_API_KEY
-    sambanova      SambaNova                         SAMBANOVA_API_KEY
-    hyperbolic     Hyperbolic                        HYPERBOLIC_API_KEY
-    nvidia / nim   NVIDIA NIM                        NVIDIA_API_KEY
-    ai21           AI21 Jamba                        AI21_API_KEY
-    moonshot/kimi  Moonshot AI (Kimi K2)             MOONSHOT_API_KEY
-    zhipu / glm    Zhipu AI (GLM-4)                 ZHIPU_API_KEY
-    stepfun/step   StepFun                           STEPFUN_API_KEY
-    minimax        MiniMax (4M context)              MINIMAX_API_KEY
-    together       Together AI (open models)         TOGETHER_API_KEY
-    fireworks      Fireworks AI (open models)        FIREWORKS_API_KEY
-    openrouter     OpenRouter (200+ models)          OPENROUTER_API_KEY
+  🆓 COMPLETELY FREE (no key, no sign-up):
+    pollinations   Pollinations AI — GPT-4o, Mistral, DeepSeek, Gemini (no key!)
+    llm7           LLM7.io — GPT-4o, Claude, Gemini, DeepSeek (no key!)
+    ollama         Ollama local (port 11434)
+    lmstudio       LM Studio local (port 1234)
+    jan            Jan.ai local (port 1337)
+    localai        LocalAI local (port 8080)
+    vllm           vLLM local (port 8000)
+    tgi            HuggingFace TGI local (port 8080)
+    xinference     Xinference local (port 9997)
 
-  LOCAL — free, no key needed:
-    opencode/zen   OpenCode / Zen mode (port 4000)
-    ollama         Ollama (port 11434)
-    lmstudio       LM Studio (port 1234)
-    jan            Jan.ai (port 1337)
-    localai        LocalAI (port 8080)
-    vllm           vLLM (port 8000)
-    tgi            HuggingFace TGI (port 8080)
-    xinference     Xinference (port 9997)
+  🆓 FREE TIER (free account/key, no credit card):
+    gemini         Google Gemini 2.5 Pro — GEMINI_API_KEY
+    groq           Groq (Llama/DeepSeek, ultra-fast) — GROQ_API_KEY
+    mistral        Mistral AI (1B tokens/month free) — MISTRAL_API_KEY
+    cerebras       Cerebras (1M tokens/day free) — CEREBRAS_API_KEY
+    deepseek       DeepSeek V3/R1 (5M tokens free) — DEEPSEEK_API_KEY
+    cohere         Cohere Command-R+ — COHERE_API_KEY
+    nvidia         NVIDIA NIM (1K req/day free) — NVIDIA_API_KEY
+    githubmodels   GitHub Models (150 req/day) — GITHUB_TOKEN
+    huggingface    HuggingFace Inference (200+ models) — HF_TOKEN
+    cloudflare     Cloudflare Workers AI (10K neurons/day) — CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN
+    siliconflow    SiliconFlow (many models free) — SILICONFLOW_API_KEY
+    modelscope     ModelScope/Alibaba (free tier) — MODELSCOPE_API_KEY
 
-  ANTHROPIC-NATIVE:
+  💰 PAID CLOUD:
+    openai         OpenAI GPT-4o, o3, GPT-4.1 — OPENAI_API_KEY
+    xai / grok     xAI Grok-3 — XAI_API_KEY
+    together       Together AI (open models) — TOGETHER_API_KEY
+    fireworks      Fireworks AI (open models) — FIREWORKS_API_KEY
+    openrouter     OpenRouter 200+ models — OPENROUTER_API_KEY
+    perplexity     Perplexity Sonar (web search) — PERPLEXITY_API_KEY
+    sambanova      SambaNova — SAMBANOVA_API_KEY
+    hyperbolic     Hyperbolic — HYPERBOLIC_API_KEY
+    ai21           AI21 Jamba (256k ctx) — AI21_API_KEY
+    moonshot/kimi  Moonshot AI Kimi K2 — MOONSHOT_API_KEY
+    zhipu / glm    Zhipu AI GLM-4 — ZHIPU_API_KEY
+    stepfun/step   StepFun — STEPFUN_API_KEY
+    minimax        MiniMax (4M ctx!) — MINIMAX_API_KEY
+
+  🤖 LOCAL AI TOOLS:
+    opencode/zen   OpenCode / Zen mode — OPENCODE_HOST optional
+
+  🔒 ANTHROPIC-NATIVE:
     bedrock        AWS Bedrock
     vertex         Google Vertex AI
     foundry/azure  Azure AI Foundry
 
-  OTHER:
+  ⚙️  OTHER:
     custom         Any OpenAI-compatible endpoint (OPENAI_BASE_URL)
-    reset          Back to Anthropic default
+    reset          Back to Anthropic (default)
 EOF
     ;;
 
