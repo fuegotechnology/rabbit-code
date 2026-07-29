@@ -15,6 +15,9 @@ import { getSmallFastModel } from 'src/utils/model/model.js'
 import {
   getAPIProvider,
   isFirstPartyAnthropicBaseUrl,
+  isOpenAICompatibleProvider,
+  getOpenAICompatibleBaseURL,
+  getOpenAICompatibleApiKey,
 } from 'src/utils/model/providers.js'
 import { getProxyFetchOptions } from 'src/utils/proxy.js'
 import {
@@ -150,6 +153,32 @@ export async function getAnthropicClient({
       fetch: resolvedFetch,
     }),
   }
+
+  // ── OpenAI-compatible providers (OpenAI, Gemini, Groq, Mistral, xAI, etc.) ──
+  // These providers use the OpenAI Chat Completions API format. We wrap the
+  // standard Anthropic SDK with a custom baseURL + apiKey so that the rest of
+  // the codebase (claude.ts, query.ts) continues to work unmodified.
+  // The actual translation between Anthropic-format messages and OpenAI-format
+  // messages happens in openaiCompatibleClient.ts, which is called directly
+  // from the query path when an OpenAI-compatible provider is active.
+  if (isOpenAICompatibleProvider(getAPIProvider())) {
+    const compatBaseURL = getOpenAICompatibleBaseURL()
+    const compatApiKey = getOpenAICompatibleApiKey()
+    logForDebugging(
+      `[API:client] Using OpenAI-compatible client → ${compatBaseURL}`,
+    )
+    const compatConfig: ConstructorParameters<typeof Anthropic>[0] = {
+      apiKey: compatApiKey || 'sk-no-key-required',
+      baseURL: compatBaseURL,
+      ...ARGS,
+      ...(isDebugToStdErr() && { logger: createStderrLogger() }),
+    }
+    // We use the standard Anthropic client pointed at the OpenAI-compat URL.
+    // Actual message-format translation is done in openaiCompatibleClient.ts
+    // and injected via the query pipeline.
+    return new Anthropic(compatConfig)
+  }
+
   if (isEnvTruthy(process.env.CLAUDE_CODE_USE_BEDROCK)) {
     const { AnthropicBedrock } = await import('@anthropic-ai/bedrock-sdk')
     // Use region override for small fast model if specified

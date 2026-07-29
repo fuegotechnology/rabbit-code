@@ -28,13 +28,59 @@ import { LIGHTNING_BOLT } from '../../constants/figures.js'
 import { isModelAllowed } from './modelAllowlist.js'
 import { type ModelAlias, isModelAlias } from './aliases.js'
 import { capitalize } from '../stringUtils.js'
+import {
+  getAPIProvider,
+  isOpenAICompatibleProvider,
+} from './providers.js'
+import {
+  resolveModelForProvider,
+  getDefaultModelForProvider,
+} from './universalModels.js'
 
 export type ModelShortName = string
 export type ModelName = string
 export type ModelSetting = ModelName | ModelAlias | null
 
 export function getSmallFastModel(): ModelName {
-  return process.env.ANTHROPIC_SMALL_FAST_MODEL || getDefaultHaikuModel()
+  if (process.env.ANTHROPIC_SMALL_FAST_MODEL) {
+    return process.env.ANTHROPIC_SMALL_FAST_MODEL
+  }
+  const provider = getAPIProvider()
+  if (isOpenAICompatibleProvider(provider)) {
+    // Use the user-set model, or a lightweight known default for the provider
+    const smallModels: Partial<Record<typeof provider, string>> = {
+      openai: 'gpt-4o-mini',
+      gemini: 'gemini-2.5-flash',
+      groq: 'llama-3.1-8b-instant',
+      mistral: 'mistral-small-latest',
+      xai: 'grok-3-mini',
+      together: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
+      fireworks: 'accounts/fireworks/models/llama-v3p3-70b-instruct',
+      openrouter: 'meta-llama/llama-3.3-70b-instruct',
+      ollama: 'llama3.2',
+      lmstudio: 'local-model',
+      custom: process.env.ANTHROPIC_MODEL ?? 'gpt-4o-mini',
+    }
+    return (
+      process.env.ANTHROPIC_MODEL ||
+      smallModels[provider as keyof typeof smallModels] ||
+      getDefaultModelForProvider(provider) ||
+      'gpt-4o-mini'
+    )
+  }
+  return getDefaultHaikuModel()
+}
+
+/**
+ * Get the main loop model. For OpenAI-compatible providers,
+ * resolves to ANTHROPIC_MODEL env or the provider's default.
+ */
+function getMainLoopModelForProvider(): ModelName | null {
+  const provider = getAPIProvider()
+  if (isOpenAICompatibleProvider(provider)) {
+    return resolveModelForProvider(provider)
+  }
+  return null
 }
 
 export function isNonCustomOpusModel(model: ModelName): boolean {
@@ -90,6 +136,12 @@ export function getUserSpecifiedModelSetting(): ModelSetting | undefined {
  * @returns The resolved model name to use
  */
 export function getMainLoopModel(): ModelName {
+  // For OpenAI-compatible providers, resolve the model early and skip
+  // Anthropic-specific alias resolution.
+  const providerModel = getMainLoopModelForProvider()
+  if (providerModel !== null) {
+    return providerModel
+  }
   const model = getUserSpecifiedModelSetting()
   if (model !== undefined && model !== null) {
     return parseUserSpecifiedModel(model)

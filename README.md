@@ -1,18 +1,17 @@
 <div align="center">
 
-# Claude Code — Leaked Source
+# rabbit-code — Enhanced Claude Code
 
-**The full source code of Anthropic's Claude Code CLI, leaked on March 31, 2026**
+**The leaked Claude Code source, enhanced with universal AI provider support**
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-512K%2B_lines-3178C6?logo=typescript&logoColor=white)](#tech-stack)
 [![Bun](https://img.shields.io/badge/Runtime-Bun-f472b6?logo=bun&logoColor=white)](#tech-stack)
 [![React + Ink](https://img.shields.io/badge/UI-React_%2B_Ink-61DAFB?logo=react&logoColor=black)](#tech-stack)
-[![Files](https://img.shields.io/badge/~1,900_files-source_only-grey)](#directory-structure)
+[![Providers](https://img.shields.io/badge/AI_Providers-15-brightgreen)](#-ai-provider-support)
 [![MCP Server](https://img.shields.io/badge/MCP-Explorer_Server-blueviolet)](#-explore-with-mcp-server)
-[![npm](https://img.shields.io/npm/v/warrioraashuu-codemaster?label=npm&color=cb3837&logo=npm)](https://www.npmjs.com/package/warrioraashuu-codemaster)
-[![Twitter Follow](https://img.shields.io/twitter/follow/warrioraashuu?style=social)](https://twitter.com/intent/follow?screen_name=warrioraashuu)
 
-> The original unmodified leaked source is preserved in the [`backup` branch](https://github.com/codeaashu/claude-code/tree/backup).
+> **Enhancement branch** — adds universal AI provider support (OpenAI, Gemini, Groq, Mistral, xAI, Ollama & more) on top of the original leaked Claude Code source.
+> The unmodified original is in the [`main`](../../tree/main) branch.
 
 </div>
 
@@ -38,6 +37,7 @@
 
 ## Table of Contents
 
+- [🔌 AI Provider Support](#-ai-provider-support) ← **NEW**
 - [How It Leaked](#how-it-leaked)
 - [What Is Claude Code?](#what-is-claude-code)
 - [Documentation](#-documentation)
@@ -56,6 +56,74 @@
 - [GitPretty Setup](#gitpretty-setup)
 - [Contributing](#contributing)
 - [Disclaimer](#disclaimer)
+
+---
+
+## 🔌 AI Provider Support
+
+rabbit-code supports **15 AI providers** via a unified environment-variable interface.
+Every provider speaks the OpenAI Chat Completions format internally, so tools, file editing,
+bash execution, and the full agent loop work with any model.
+
+### Quick Switch
+
+```bash
+# Use the setup helper (source it to export env vars into your shell)
+source scripts/setup-provider.sh openai       gpt-4o
+source scripts/setup-provider.sh gemini       gemini-2.5-pro
+source scripts/setup-provider.sh groq         llama-3.3-70b-versatile
+source scripts/setup-provider.sh mistral      mistral-large-latest
+source scripts/setup-provider.sh xai          grok-3
+source scripts/setup-provider.sh ollama       llama3.3          # free, local
+source scripts/setup-provider.sh lmstudio                       # free, local
+source scripts/setup-provider.sh openrouter   anthropic/claude-opus-4
+source scripts/setup-provider.sh bedrock                        # AWS Bedrock
+source scripts/setup-provider.sh vertex                         # GCP Vertex AI
+source scripts/setup-provider.sh reset                          # back to Anthropic
+```
+
+### Provider Matrix
+
+| Provider | Env Flag | Key Env Var | Default Model |
+|----------|----------|-------------|---------------|
+| **Anthropic** (default) | — | `ANTHROPIC_API_KEY` | claude-opus-4-6 |
+| **OpenAI** | `CLAUDE_CODE_USE_OPENAI=1` | `OPENAI_API_KEY` | gpt-4o |
+| **Google Gemini** | `CLAUDE_CODE_USE_GEMINI=1` | `GEMINI_API_KEY` | gemini-2.5-pro |
+| **Groq** | `CLAUDE_CODE_USE_GROQ=1` | `GROQ_API_KEY` | llama-3.3-70b-versatile |
+| **Mistral AI** | `CLAUDE_CODE_USE_MISTRAL=1` | `MISTRAL_API_KEY` | mistral-large-latest |
+| **xAI (Grok)** | `CLAUDE_CODE_USE_XAI=1` | `XAI_API_KEY` | grok-3 |
+| **Together AI** | `CLAUDE_CODE_USE_TOGETHER=1` | `TOGETHER_API_KEY` | Llama 3.3 70B |
+| **Fireworks AI** | `CLAUDE_CODE_USE_FIREWORKS=1` | `FIREWORKS_API_KEY` | Llama 3.3 70B |
+| **OpenRouter** | `CLAUDE_CODE_USE_OPENROUTER=1` | `OPENROUTER_API_KEY` | any model |
+| **Ollama** *(local)* | `CLAUDE_CODE_USE_OLLAMA=1` | none | llama3.3 |
+| **LM Studio** *(local)* | `CLAUDE_CODE_USE_LMSTUDIO=1` | none | any loaded |
+| **Custom endpoint** | `CLAUDE_CODE_USE_CUSTOM_PROVIDER=1` | optional | via `ANTHROPIC_MODEL` |
+| **AWS Bedrock** | `CLAUDE_CODE_USE_BEDROCK=1` | AWS creds | claude-opus-4-6 |
+| **Google Vertex AI** | `CLAUDE_CODE_USE_VERTEX=1` | GCP creds | claude-opus-4-6 |
+| **Azure Foundry** | `CLAUDE_CODE_USE_FOUNDRY=1` | Azure creds | claude-opus-4-6 |
+
+Any model can be overridden with `ANTHROPIC_MODEL=<model-id>`.
+
+### In-Session Provider Info
+
+```
+/provider          — show current provider, endpoint, key status, and model list
+/provider ollama   — show Ollama-specific models and live API model list
+```
+
+### Custom OpenAI-compatible Endpoint
+
+Works with **vLLM, TGI, LocalAI, Xinference, LiteLLM, Jan**, and any server
+that speaks the OpenAI Chat Completions API:
+
+```bash
+export CLAUDE_CODE_USE_CUSTOM_PROVIDER=1
+export OPENAI_BASE_URL=http://localhost:8000/v1
+export OPENAI_API_KEY=my-optional-key
+export ANTHROPIC_MODEL=my-model-name
+```
+
+See [docs/providers.md](docs/providers.md) for the full reference.
 
 ---
 

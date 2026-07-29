@@ -1,7 +1,22 @@
 import type { ModelName } from './model.js'
 import type { APIProvider } from './providers.js'
 
-export type ModelConfig = Record<APIProvider, ModelName>
+/**
+ * ModelConfig maps each APIProvider to its provider-specific model ID string.
+ *
+ * For native Anthropic providers (firstParty, bedrock, vertex, foundry) each
+ * key maps to the real model ID used by that provider's SDK/endpoint.
+ *
+ * For OpenAI-compatible providers (openai, gemini, groq, mistral, etc.) the
+ * model strings are NOT used from this table — the actual model is resolved
+ * via `universalModels.ts` + the ANTHROPIC_MODEL env var. We fill them with
+ * the firstParty string as a harmless fallback so `Record<APIProvider, …>`
+ * stays satisfiable without listing every provider here.
+ */
+export type ModelConfig = Record<
+  Extract<APIProvider, 'firstParty' | 'bedrock' | 'vertex' | 'foundry'>,
+  ModelName
+> & Partial<Record<APIProvider, ModelName>>
 
 // @[MODEL LAUNCH]: Add a new CLAUDE_*_CONFIG constant here. Double check the correct model strings
 // here since the pattern may change.
