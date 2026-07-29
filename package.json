@@ -1,13 +1,14 @@
 {
-  "name": "@anthropic-ai/claude-code",
-  "version": "0.0.0-leaked",
-  "description": "Anthropic Claude Code CLI — leaked source (2026-03-31). Not an official release.",
-  "license": "UNLICENSED",
+  "name": "rabbit-code",
+  "version": "1.0.0",
+  "description": "rabbit-code — enhanced AI coding CLI with universal provider support (OpenAI, Gemini, Groq, Mistral, xAI, Ollama, DeepSeek, Cohere, Perplexity, Cerebras, SambaNova & more)",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "main": "src/entrypoints/cli.tsx",
   "bin": {
-    "claude": "src/entrypoints/cli.tsx"
+    "rabbit": "src/entrypoints/cli.tsx",
+    "rabbit-code": "src/entrypoints/cli.tsx"
   },
   "scripts": {
     "build": "bun scripts/build-bundle.ts",

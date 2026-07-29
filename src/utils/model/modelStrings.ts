@@ -121,9 +121,20 @@ function initModelStrings(): void {
     // Already initialized
     return
   }
+  const provider = getAPIProvider()
+  // OpenAI-compatible providers don't use Anthropic model strings at all.
+  // Use firstParty strings as a harmless fallback so the rest of the code
+  // that reads getModelStrings() doesn't crash. The actual model used is
+  // determined by getMainLoopModel() / getSmallFastModel() which handle
+  // the provider check themselves.
+  const { isOpenAICompatibleProvider } = require('./providers.js') as typeof import('./providers.js')
+  if (isOpenAICompatibleProvider(provider)) {
+    setModelStringsState(getBuiltinModelStrings('firstParty'))
+    return
+  }
   // Initial with default values for non-Bedrock providers
-  if (getAPIProvider() !== 'bedrock') {
-    setModelStringsState(getBuiltinModelStrings(getAPIProvider()))
+  if (provider !== 'bedrock') {
+    setModelStringsState(getBuiltinModelStrings(provider))
     return
   }
   // On Bedrock, update model strings in the background without blocking.

@@ -1,18 +1,17 @@
 <div align="center">
 
-# Claude Code — Leaked Source
+# rabbit-code — Enhanced Claude Code
 
-**The full source code of Anthropic's Claude Code CLI, leaked on March 31, 2026**
+**The leaked Claude Code source, enhanced with universal AI provider support**
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-512K%2B_lines-3178C6?logo=typescript&logoColor=white)](#tech-stack)
 [![Bun](https://img.shields.io/badge/Runtime-Bun-f472b6?logo=bun&logoColor=white)](#tech-stack)
 [![React + Ink](https://img.shields.io/badge/UI-React_%2B_Ink-61DAFB?logo=react&logoColor=black)](#tech-stack)
-[![Files](https://img.shields.io/badge/~1,900_files-source_only-grey)](#directory-structure)
+[![Providers](https://img.shields.io/badge/AI_Providers-15-brightgreen)](#-ai-provider-support)
 [![MCP Server](https://img.shields.io/badge/MCP-Explorer_Server-blueviolet)](#-explore-with-mcp-server)
-[![npm](https://img.shields.io/npm/v/warrioraashuu-codemaster?label=npm&color=cb3837&logo=npm)](https://www.npmjs.com/package/warrioraashuu-codemaster)
-[![Twitter Follow](https://img.shields.io/twitter/follow/warrioraashuu?style=social)](https://twitter.com/intent/follow?screen_name=warrioraashuu)
 
-> The original unmodified leaked source is preserved in the [`backup` branch](https://github.com/codeaashu/claude-code/tree/backup).
+> **Enhancement branch** — adds universal AI provider support (OpenAI, Gemini, Groq, Mistral, xAI, Ollama & more) on top of the original leaked Claude Code source.
+> The unmodified original is in the [`main`](../../tree/main) branch.
 
 </div>
 
@@ -38,6 +37,7 @@
 
 ## Table of Contents
 
+- [🔌 AI Provider Support](#-ai-provider-support) ← **NEW**
 - [How It Leaked](#how-it-leaked)
 - [What Is Claude Code?](#what-is-claude-code)
 - [Documentation](#-documentation)
@@ -56,6 +56,88 @@
 - [GitPretty Setup](#gitpretty-setup)
 - [Contributing](#contributing)
 - [Disclaimer](#disclaimer)
+
+---
+
+## 🔌 AI Provider Support
+
+rabbit-code supports **30+ AI providers** via a unified environment-variable interface.
+Every provider speaks the OpenAI Chat Completions format internally, so tools, file editing,
+bash execution, and the full agent loop work with any model.
+
+### Quick Switch
+
+```bash
+# Use the setup helper (source to export env vars into your shell):
+source scripts/setup-provider.sh openai       gpt-4o
+source scripts/setup-provider.sh gemini       gemini-2.5-pro
+source scripts/setup-provider.sh groq         llama-3.3-70b-versatile
+source scripts/setup-provider.sh deepseek     deepseek-chat       # cheap + great for code
+source scripts/setup-provider.sh perplexity   sonar-pro           # web-search AI
+source scripts/setup-provider.sh cerebras     llama-4-scout-17b-16e-instruct  # ultra-fast
+source scripts/setup-provider.sh xai          grok-3
+source scripts/setup-provider.sh opencode                         # zen-mode local proxy
+source scripts/setup-provider.sh ollama       llama3.3            # free, local
+source scripts/setup-provider.sh openrouter   anthropic/claude-opus-4
+source scripts/setup-provider.sh reset                            # back to Anthropic
+
+source scripts/setup-provider.sh list  # show ALL providers
+```
+
+### Provider Matrix
+
+**☁ Cloud:**
+
+| Provider | Flag | Key Var | Default Model |
+|----------|------|---------|---------------|
+| **Anthropic** (default) | — | `ANTHROPIC_API_KEY` | claude-opus-4-6 |
+| **OpenAI** | `RABBIT_USE_OPENAI=1` | `OPENAI_API_KEY` | gpt-4o |
+| **Google Gemini** | `RABBIT_USE_GEMINI=1` | `GEMINI_API_KEY` | gemini-2.5-pro |
+| **Groq** | `RABBIT_USE_GROQ=1` | `GROQ_API_KEY` | llama-3.3-70b-versatile |
+| **Mistral AI** | `RABBIT_USE_MISTRAL=1` | `MISTRAL_API_KEY` | mistral-large-latest |
+| **xAI (Grok)** | `RABBIT_USE_XAI=1` | `XAI_API_KEY` | grok-3 |
+| **DeepSeek** | `RABBIT_USE_DEEPSEEK=1` | `DEEPSEEK_API_KEY` | deepseek-chat |
+| **Cohere** | `RABBIT_USE_COHERE=1` | `COHERE_API_KEY` | command-r-plus-08-2024 |
+| **Perplexity** | `RABBIT_USE_PERPLEXITY=1` | `PERPLEXITY_API_KEY` | sonar-pro |
+| **Cerebras** | `RABBIT_USE_CEREBRAS=1` | `CEREBRAS_API_KEY` | llama-4-scout |
+| **SambaNova** | `RABBIT_USE_SAMBANOVA=1` | `SAMBANOVA_API_KEY` | Llama-3.3-70B |
+| **Hyperbolic** | `RABBIT_USE_HYPERBOLIC=1` | `HYPERBOLIC_API_KEY` | Llama-3.3-70B |
+| **NVIDIA NIM** | `RABBIT_USE_NVIDIA=1` | `NVIDIA_API_KEY` | llama-3.3-70b |
+| **AI21 Labs** | `RABBIT_USE_AI21=1` | `AI21_API_KEY` | jamba-1.6-large |
+| **Moonshot (Kimi)** | `RABBIT_USE_MOONSHOT=1` | `MOONSHOT_API_KEY` | kimi-k2 |
+| **Zhipu (GLM)** | `RABBIT_USE_ZHIPU=1` | `ZHIPU_API_KEY` | glm-4-plus |
+| **StepFun** | `RABBIT_USE_STEPFUN=1` | `STEPFUN_API_KEY` | step-2-16k |
+| **MiniMax** | `RABBIT_USE_MINIMAX=1` | `MINIMAX_API_KEY` | MiniMax-Text-01 (4M ctx) |
+| **Together AI** | `RABBIT_USE_TOGETHER=1` | `TOGETHER_API_KEY` | Llama 3.3 70B |
+| **Fireworks AI** | `RABBIT_USE_FIREWORKS=1` | `FIREWORKS_API_KEY` | Llama 3.3 70B |
+| **OpenRouter** | `RABBIT_USE_OPENROUTER=1` | `OPENROUTER_API_KEY` | any (200+ models) |
+
+**🖥 Local (free, no key):**
+
+| Provider | Flag | Port |
+|----------|------|------|
+| **OpenCode / Zen** | `RABBIT_USE_OPENCODE=1` | 4000 |
+| **Ollama** | `RABBIT_USE_OLLAMA=1` | 11434 |
+| **LM Studio** | `RABBIT_USE_LMSTUDIO=1` | 1234 |
+| **Jan.ai** | `RABBIT_USE_JAN=1` | 1337 |
+| **LocalAI** | `RABBIT_USE_LOCALAI=1` | 8080 |
+| **vLLM** | `RABBIT_USE_VLLM=1` | 8000 |
+| **TGI** | `RABBIT_USE_TGI=1` | 8080 |
+| **Xinference** | `RABBIT_USE_XINFERENCE=1` | 9997 |
+| **Custom** | `RABBIT_USE_CUSTOM=1` | `OPENAI_BASE_URL` |
+
+**🔒 Anthropic-native:** `RABBIT_USE_BEDROCK=1` · `RABBIT_USE_VERTEX=1` · `RABBIT_USE_FOUNDRY=1`
+
+> Legacy `CLAUDE_CODE_USE_*` flags still work for backwards compatibility.
+
+### In-Session Commands
+```
+/provider            — show current provider, all providers, key status, model list
+/provider deepseek   — show DeepSeek models + live API list
+/model               — switch model within current provider
+```
+
+See **[docs/providers.md](docs/providers.md)** for the full per-provider reference.
 
 ---
 
