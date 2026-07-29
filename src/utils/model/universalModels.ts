@@ -682,6 +682,583 @@ export const LMSTUDIO_MODELS: ProviderModelMap = {
 }
 
 // ---------------------------------------------------------------------------
+// DeepSeek
+// ---------------------------------------------------------------------------
+export const DEEPSEEK_MODELS: ProviderModelMap = {
+  'deepseek-chat': {
+    id: 'deepseek-chat',
+    displayName: 'DeepSeek V3 (Chat)',
+    contextWindow: 65_536,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 0.14,
+    costPerMTokenOutput: 0.28,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'deepseek-v3',
+    isDefault: true,
+  },
+  'deepseek-reasoner': {
+    id: 'deepseek-reasoner',
+    displayName: 'DeepSeek R1 (Reasoner)',
+    contextWindow: 65_536,
+    maxOutputTokens: 32_768,
+    costPerMTokenInput: 0.55,
+    costPerMTokenOutput: 2.19,
+    supportsTools: false,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'deepseek-r1',
+  },
+  'deepseek-coder': {
+    id: 'deepseek-coder',
+    displayName: 'DeepSeek Coder V2',
+    contextWindow: 65_536,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 0.14,
+    costPerMTokenOutput: 0.28,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'deepseek-coder',
+  },
+}
+
+// ---------------------------------------------------------------------------
+// Cohere
+// ---------------------------------------------------------------------------
+export const COHERE_MODELS: ProviderModelMap = {
+  'command-r-plus-08-2024': {
+    id: 'command-r-plus-08-2024',
+    displayName: 'Command R+ (Aug 2024)',
+    contextWindow: 128_000,
+    maxOutputTokens: 4_096,
+    costPerMTokenInput: 2.5,
+    costPerMTokenOutput: 10,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'command-r-plus',
+    isDefault: true,
+  },
+  'command-r-08-2024': {
+    id: 'command-r-08-2024',
+    displayName: 'Command R (Aug 2024)',
+    contextWindow: 128_000,
+    maxOutputTokens: 4_096,
+    costPerMTokenInput: 0.15,
+    costPerMTokenOutput: 0.6,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'command-r',
+  },
+  'command-a-03-2025': {
+    id: 'command-a-03-2025',
+    displayName: 'Command A (Mar 2025)',
+    contextWindow: 256_000,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 2.5,
+    costPerMTokenOutput: 10,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'command-a',
+  },
+}
+
+// ---------------------------------------------------------------------------
+// Perplexity
+// ---------------------------------------------------------------------------
+export const PERPLEXITY_MODELS: ProviderModelMap = {
+  'sonar-pro': {
+    id: 'sonar-pro',
+    displayName: 'Sonar Pro (online search)',
+    contextWindow: 200_000,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 3,
+    costPerMTokenOutput: 15,
+    supportsTools: false,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'sonar',
+    isDefault: true,
+  },
+  'sonar': {
+    id: 'sonar',
+    displayName: 'Sonar (online search)',
+    contextWindow: 200_000,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 1,
+    costPerMTokenOutput: 1,
+    supportsTools: false,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'sonar',
+  },
+  'sonar-reasoning-pro': {
+    id: 'sonar-reasoning-pro',
+    displayName: 'Sonar Reasoning Pro',
+    contextWindow: 200_000,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 8,
+    costPerMTokenOutput: 40,
+    supportsTools: false,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'sonar-reasoning',
+  },
+  'sonar-deep-research': {
+    id: 'sonar-deep-research',
+    displayName: 'Sonar Deep Research',
+    contextWindow: 200_000,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 2,
+    costPerMTokenOutput: 8,
+    supportsTools: false,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'sonar-research',
+  },
+}
+
+// ---------------------------------------------------------------------------
+// Cerebras (ultra-fast inference)
+// ---------------------------------------------------------------------------
+export const CEREBRAS_MODELS: ProviderModelMap = {
+  'llama-4-scout-17b-16e-instruct': {
+    id: 'llama-4-scout-17b-16e-instruct',
+    displayName: 'Llama 4 Scout 17B (Cerebras)',
+    contextWindow: 131_072,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 0.1,
+    costPerMTokenOutput: 0.1,
+    supportsTools: true,
+    supportsVision: true,
+    supportsStreaming: true,
+    family: 'llama-4',
+    isDefault: true,
+  },
+  'llama3.1-70b': {
+    id: 'llama3.1-70b',
+    displayName: 'Llama 3.1 70B (Cerebras)',
+    contextWindow: 128_000,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 0.6,
+    costPerMTokenOutput: 0.6,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'llama-3',
+  },
+  'llama3.1-8b': {
+    id: 'llama3.1-8b',
+    displayName: 'Llama 3.1 8B (Cerebras)',
+    contextWindow: 128_000,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 0.1,
+    costPerMTokenOutput: 0.1,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'llama-3',
+  },
+  'qwen-3-32b': {
+    id: 'qwen-3-32b',
+    displayName: 'Qwen 3 32B (Cerebras)',
+    contextWindow: 131_072,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 0.4,
+    costPerMTokenOutput: 0.4,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'qwen',
+  },
+}
+
+// ---------------------------------------------------------------------------
+// SambaNova
+// ---------------------------------------------------------------------------
+export const SAMBANOVA_MODELS: ProviderModelMap = {
+  'Meta-Llama-3.3-70B-Instruct': {
+    id: 'Meta-Llama-3.3-70B-Instruct',
+    displayName: 'Llama 3.3 70B (SambaNova)',
+    contextWindow: 128_000,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 0.6,
+    costPerMTokenOutput: 1.2,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'llama-3',
+    isDefault: true,
+  },
+  'DeepSeek-R1-Distill-Llama-70B': {
+    id: 'DeepSeek-R1-Distill-Llama-70B',
+    displayName: 'DeepSeek R1 Distill 70B (SambaNova)',
+    contextWindow: 128_000,
+    maxOutputTokens: 16_384,
+    costPerMTokenInput: 1.0,
+    costPerMTokenOutput: 2.0,
+    supportsTools: false,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'deepseek',
+  },
+  'Qwen3-32B': {
+    id: 'Qwen3-32B',
+    displayName: 'Qwen 3 32B (SambaNova)',
+    contextWindow: 131_072,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 0.4,
+    costPerMTokenOutput: 0.8,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'qwen',
+  },
+}
+
+// ---------------------------------------------------------------------------
+// Hyperbolic
+// ---------------------------------------------------------------------------
+export const HYPERBOLIC_MODELS: ProviderModelMap = {
+  'meta-llama/Llama-3.3-70B-Instruct': {
+    id: 'meta-llama/Llama-3.3-70B-Instruct',
+    displayName: 'Llama 3.3 70B (Hyperbolic)',
+    contextWindow: 128_000,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 0.4,
+    costPerMTokenOutput: 0.4,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'llama-3',
+    isDefault: true,
+  },
+  'deepseek-ai/DeepSeek-V3': {
+    id: 'deepseek-ai/DeepSeek-V3',
+    displayName: 'DeepSeek V3 (Hyperbolic)',
+    contextWindow: 65_536,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 0.5,
+    costPerMTokenOutput: 0.5,
+    supportsTools: false,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'deepseek',
+  },
+  'Qwen/Qwen2.5-72B-Instruct': {
+    id: 'Qwen/Qwen2.5-72B-Instruct',
+    displayName: 'Qwen 2.5 72B (Hyperbolic)',
+    contextWindow: 131_072,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 0.4,
+    costPerMTokenOutput: 0.4,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'qwen',
+  },
+}
+
+// ---------------------------------------------------------------------------
+// NVIDIA NIM
+// ---------------------------------------------------------------------------
+export const NVIDIA_MODELS: ProviderModelMap = {
+  'meta/llama-3.3-70b-instruct': {
+    id: 'meta/llama-3.3-70b-instruct',
+    displayName: 'Llama 3.3 70B (NVIDIA NIM)',
+    contextWindow: 128_000,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 0.77,
+    costPerMTokenOutput: 0.77,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'llama-3',
+    isDefault: true,
+  },
+  'nvidia/llama-3.1-nemotron-ultra-253b-v1': {
+    id: 'nvidia/llama-3.1-nemotron-ultra-253b-v1',
+    displayName: 'Nemotron Ultra 253B (NVIDIA)',
+    contextWindow: 128_000,
+    maxOutputTokens: 32_768,
+    costPerMTokenInput: 3.0,
+    costPerMTokenOutput: 3.0,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'nemotron',
+  },
+  'mistralai/mistral-large-2-instruct': {
+    id: 'mistralai/mistral-large-2-instruct',
+    displayName: 'Mistral Large 2 (NVIDIA NIM)',
+    contextWindow: 128_000,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 2.0,
+    costPerMTokenOutput: 6.0,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'mistral',
+  },
+}
+
+// ---------------------------------------------------------------------------
+// AI21 Labs
+// ---------------------------------------------------------------------------
+export const AI21_MODELS: ProviderModelMap = {
+  'jamba-1.6-large': {
+    id: 'jamba-1.6-large',
+    displayName: 'Jamba 1.6 Large',
+    contextWindow: 256_000,
+    maxOutputTokens: 4_096,
+    costPerMTokenInput: 2.0,
+    costPerMTokenOutput: 8.0,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'jamba',
+    isDefault: true,
+  },
+  'jamba-1.6-mini': {
+    id: 'jamba-1.6-mini',
+    displayName: 'Jamba 1.6 Mini',
+    contextWindow: 256_000,
+    maxOutputTokens: 4_096,
+    costPerMTokenInput: 0.2,
+    costPerMTokenOutput: 0.4,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'jamba',
+  },
+}
+
+// ---------------------------------------------------------------------------
+// Moonshot AI (Kimi)
+// ---------------------------------------------------------------------------
+export const MOONSHOT_MODELS: ProviderModelMap = {
+  'kimi-k2': {
+    id: 'kimi-k2',
+    displayName: 'Kimi K2',
+    contextWindow: 131_072,
+    maxOutputTokens: 16_384,
+    costPerMTokenInput: 0.6,
+    costPerMTokenOutput: 2.5,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'kimi',
+    isDefault: true,
+  },
+  'moonshot-v1-128k': {
+    id: 'moonshot-v1-128k',
+    displayName: 'Moonshot v1 128k',
+    contextWindow: 128_000,
+    maxOutputTokens: 4_096,
+    costPerMTokenInput: 8.0,
+    costPerMTokenOutput: 24.0,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'moonshot',
+  },
+}
+
+// ---------------------------------------------------------------------------
+// Zhipu AI (GLM)
+// ---------------------------------------------------------------------------
+export const ZHIPU_MODELS: ProviderModelMap = {
+  'glm-4-plus': {
+    id: 'glm-4-plus',
+    displayName: 'GLM-4 Plus',
+    contextWindow: 128_000,
+    maxOutputTokens: 4_096,
+    costPerMTokenInput: 5.0,
+    costPerMTokenOutput: 5.0,
+    supportsTools: true,
+    supportsVision: true,
+    supportsStreaming: true,
+    family: 'glm-4',
+    isDefault: true,
+  },
+  'glm-4-air': {
+    id: 'glm-4-air',
+    displayName: 'GLM-4 Air',
+    contextWindow: 128_000,
+    maxOutputTokens: 4_096,
+    costPerMTokenInput: 1.0,
+    costPerMTokenOutput: 1.0,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'glm-4',
+  },
+}
+
+// ---------------------------------------------------------------------------
+// StepFun
+// ---------------------------------------------------------------------------
+export const STEPFUN_MODELS: ProviderModelMap = {
+  'step-2-16k': {
+    id: 'step-2-16k',
+    displayName: 'Step-2 16k',
+    contextWindow: 16_000,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 4.8,
+    costPerMTokenOutput: 16.0,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'step-2',
+    isDefault: true,
+  },
+  'step-1-8k': {
+    id: 'step-1-8k',
+    displayName: 'Step-1 8k',
+    contextWindow: 8_000,
+    maxOutputTokens: 4_096,
+    costPerMTokenInput: 1.2,
+    costPerMTokenOutput: 4.0,
+    supportsTools: false,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'step-1',
+  },
+}
+
+// ---------------------------------------------------------------------------
+// MiniMax
+// ---------------------------------------------------------------------------
+export const MINIMAX_MODELS: ProviderModelMap = {
+  'MiniMax-Text-01': {
+    id: 'MiniMax-Text-01',
+    displayName: 'MiniMax Text-01 (4M context)',
+    contextWindow: 4_096_000,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 0.2,
+    costPerMTokenOutput: 1.1,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'minimax-text',
+    isDefault: true,
+  },
+  'abab6.5s-chat': {
+    id: 'abab6.5s-chat',
+    displayName: 'ABAB 6.5S Chat',
+    contextWindow: 245_760,
+    maxOutputTokens: 8_192,
+    costPerMTokenInput: 0.1,
+    costPerMTokenOutput: 0.1,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    family: 'abab',
+  },
+}
+
+// ---------------------------------------------------------------------------
+// OpenCode / Zen-mode (local AI coding assistant proxy)
+// ---------------------------------------------------------------------------
+export const OPENCODE_MODELS: ProviderModelMap = {
+  'auto': {
+    id: 'auto',
+    displayName: 'OpenCode Auto (routed)',
+    contextWindow: 200_000,
+    maxOutputTokens: 32_768,
+    supportsTools: true,
+    supportsVision: true,
+    supportsStreaming: true,
+    family: 'opencode',
+    isDefault: true,
+  },
+}
+
+// ---------------------------------------------------------------------------
+// Jan.ai (local)
+// ---------------------------------------------------------------------------
+export const JAN_MODELS: ProviderModelMap = {
+  'local-model': {
+    id: 'local-model',
+    displayName: 'Jan Local Model',
+    contextWindow: 32_768,
+    maxOutputTokens: 8_192,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    isDefault: true,
+  },
+}
+
+// ---------------------------------------------------------------------------
+// LocalAI (self-hosted)
+// ---------------------------------------------------------------------------
+export const LOCALAI_MODELS: ProviderModelMap = {
+  'gpt-4': {
+    id: 'gpt-4',
+    displayName: 'LocalAI GPT-4 (aliased)',
+    contextWindow: 32_768,
+    maxOutputTokens: 8_192,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    isDefault: true,
+  },
+}
+
+// ---------------------------------------------------------------------------
+// vLLM (self-hosted)
+// ---------------------------------------------------------------------------
+export const VLLM_MODELS: ProviderModelMap = {
+  'served-model': {
+    id: 'served-model',
+    displayName: 'vLLM Served Model',
+    contextWindow: 131_072,
+    maxOutputTokens: 16_384,
+    supportsTools: true,
+    supportsVision: false,
+    supportsStreaming: true,
+    isDefault: true,
+  },
+}
+
+// ---------------------------------------------------------------------------
+// HuggingFace TGI (self-hosted)
+// ---------------------------------------------------------------------------
+export const TGI_MODELS: ProviderModelMap = {
+  'tgi-model': {
+    id: 'tgi-model',
+    displayName: 'TGI Served Model',
+    contextWindow: 32_768,
+    maxOutputTokens: 4_096,
+    supportsTools: false,
+    supportsVision: false,
+    supportsStreaming: true,
+    isDefault: true,
+  },
+}
+
+// ---------------------------------------------------------------------------
+// Xinference (self-hosted)
+// ---------------------------------------------------------------------------
+export const XINFERENCE_MODELS: ProviderModelMap = {
+  'xinference-model': {
+    id: 'xinference-model',
+    displayName: 'Xinference Model',
+    contextWindow: 32_768,
+    maxOutputTokens: 4_096,
+    supportsTools: false,
+    supportsVision: false,
+    supportsStreaming: true,
+    isDefault: true,
+  },
+}
+
+// ---------------------------------------------------------------------------
 // Master map: provider → model map
 // ---------------------------------------------------------------------------
 export const PROVIDER_MODELS: Partial<Record<APIProvider, ProviderModelMap>> = {
@@ -693,8 +1270,26 @@ export const PROVIDER_MODELS: Partial<Record<APIProvider, ProviderModelMap>> = {
   together: TOGETHER_MODELS,
   fireworks: FIREWORKS_MODELS,
   openrouter: OPENROUTER_MODELS,
+  deepseek: DEEPSEEK_MODELS,
+  cohere: COHERE_MODELS,
+  perplexity: PERPLEXITY_MODELS,
+  cerebras: CEREBRAS_MODELS,
+  sambanova: SAMBANOVA_MODELS,
+  hyperbolic: HYPERBOLIC_MODELS,
+  nvidia: NVIDIA_MODELS,
+  ai21: AI21_MODELS,
+  moonshot: MOONSHOT_MODELS,
+  zhipu: ZHIPU_MODELS,
+  stepfun: STEPFUN_MODELS,
+  minimax: MINIMAX_MODELS,
+  opencode: OPENCODE_MODELS,
   ollama: OLLAMA_MODELS,
   lmstudio: LMSTUDIO_MODELS,
+  jan: JAN_MODELS,
+  localai: LOCALAI_MODELS,
+  vllm: VLLM_MODELS,
+  tgi: TGI_MODELS,
+  xinference: XINFERENCE_MODELS,
 }
 
 /**
